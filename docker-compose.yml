@@ -1,0 +1,47 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'IMS'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'example'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: '123456'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: '123456'
+    ports:
+      # <Port exposed> : <MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+
+
+  web:
+  #image: php:8.0-apache
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: mysql 
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: IMS
+      DB_USERNAME: example
+      DB_PASSWORD: 123456
+    depends_on:
+      - db
+    volumes:
+      - new1_data:/var/www/html
+# Names our volume
+volumes:   
+  my-db:
+  new1_data:
+# volumes:
+#   my-db:
