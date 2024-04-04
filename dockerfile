@@ -28,13 +28,17 @@ RUN chown www-data:www-data /var/www/html
 
 
 # Optimizing Configuration loading
-RUN php artisan config:clear
-# Optimizing Route loading
-RUN php artisan cache:clear
-RUN php artisan view:cache
-
 RUN php artisan key:generate
- 
+
+RUN php artisan config:clear
+
+RUN php artisan cache:clear
+
+RUN composer dump-autoload
+
+RUN php artisan clear-compiled  
+
+RUN php artisan session:table
 
 CMD ["sh",  "-c", "php artisan migrate --seed && php artisan serve --host=0.0.0.0 --port=8000 "]
   
